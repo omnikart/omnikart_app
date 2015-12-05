@@ -1,8 +1,12 @@
-package com.omnikart.www.omnikartseller;
+package com.omnikart.www.omnikartseller.Adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import com.omnikart.www.omnikartseller.Fragments.FirstTime.Firsttime_Fragment1;
+import com.omnikart.www.omnikartseller.Fragments.FirstTime.Firsttime_Fragment2;
+import com.omnikart.www.omnikartseller.Fragments.FirstTime.Firsttime_Fragment3;
 
 /**
  * Created by Yash Gupta on 28-11-2015.

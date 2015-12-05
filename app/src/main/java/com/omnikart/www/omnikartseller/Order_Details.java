@@ -13,6 +13,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +46,7 @@ public class Order_Details extends AppCompatActivity {
         }
 
         public void Connection_Fetch_Order_Details(){
-            final RequestQueue requestQueue = Volley.newRequestQueue(Order_Details.this);
+
             progressBar.setVisibility(View.VISIBLE);
             JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,params,
                     new Response.Listener<JSONObject>() {
@@ -221,8 +222,8 @@ public class Order_Details extends AppCompatActivity {
                         }
                     }
             );
-            requestQueue.add(jsonObjectRequest);
-
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
         }
+
 }
 

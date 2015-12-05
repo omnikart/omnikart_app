@@ -12,14 +12,22 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
+import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
+import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class Main_Login_Page extends AppCompatActivity{
@@ -32,6 +40,8 @@ public class Main_Login_Page extends AppCompatActivity{
     String url;
     String success="";
     String customerID="";
+   // String cookie = "";
+    String cookie;
     ProgressBar progressBar;
     Boolean isLoggedIn;
     @Override
@@ -85,9 +95,10 @@ public class Main_Login_Page extends AppCompatActivity{
 
       }
 
-    public void ConnectionLogIn(){
+    public void ConnectionLogIn() {
 
-        final RequestQueue requestQueue = Volley.newRequestQueue(this);
+      //  final RequestQueue requestQueue = Volley.newRequestQueue(Main_Login_Page.this);
+
                 show_data.append(params.toString());
                 progressBar.setVisibility(View.VISIBLE);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, params,
@@ -123,11 +134,40 @@ public class Main_Login_Page extends AppCompatActivity{
                                 Toast.makeText(getApplicationContext(),"Error in connection",Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                             }
-                        });
-                requestQueue.add(jsonObjectRequest);
+                        })
+                {
+                    @Override
+        protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                        try {
+                            Log.d("Volley", "inside parseNetwork");
+                            String json = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
+                            Log.d("Volley json", json);
+                            Log.d("Volley Set-Cookie", " ####  " + response.headers.get("Set-Cookie"));
+                           cookie = response.headers.get("Set-Cookie") ;
+                            Log.d("Volley full header", String.valueOf(response.headers));
+                            return Response.success(new JSONObject(json), HttpHeaderParser.parseCacheHeaders(response));
 
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                            return Response.error(new ParseError(e));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            return  Response.error(new ParseError(e));
+                        }
+                    }
+                    //@Override
+                /*public Map<String,String> getHeader() throws AuthFailureError{
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                       // cookie = headers.get("Set-Cookie");
+                    Log.d("Volley cookie", cookie);
+                    Log.d("Volley full header", String.valueOf(headers)+"   ***  dsf");
+                        //headers.put("","");
+                        return headers;
+                    }*/
+        };
 
-            }
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+    }
 
 
     public void LogIn(String req){
@@ -135,9 +175,11 @@ public class Main_Login_Page extends AppCompatActivity{
             Intent intent = new Intent(Main_Login_Page.this,Activity_Listview_Orders.class);
             Bundle bundle =new Bundle();
             bundle.putString("customer_id", customerID);
+            bundle.putString("Cookie",cookie);
             intent.putExtras(bundle);
 
             Log.d("Location", "new activity");
+            Log.d("Volley log cookie act 1",cookie+"test");
             Preference_Helper pref = new Preference_Helper(Main_Login_Page.this);
           if (checkBox.isChecked()){
            if(!isLoggedIn){

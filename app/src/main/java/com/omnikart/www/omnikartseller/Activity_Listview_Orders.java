@@ -10,15 +10,20 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.android.volley.RequestQueue;
+import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+import com.omnikart.www.omnikartseller.Adapters.ListView_Orders_Adapter;
+import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 
 
 public class Activity_Listview_Orders extends AppCompatActivity{
@@ -27,6 +32,7 @@ public class Activity_Listview_Orders extends AppCompatActivity{
     ListView list;
     String url;
     String customerID;
+    String cookie="";
     ProgressBar progressBar;
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -38,6 +44,7 @@ public class Activity_Listview_Orders extends AppCompatActivity{
         progressBar = (ProgressBar) findViewById(R.id.progressBar_listview_orders);
         Bundle bundle = getIntent().getExtras();
         customerID = bundle.getString("customer_id");
+        cookie = bundle.getString("Cookie");
         Log.d("Volley1_customerid",customerID);
         params = new JSONObject();
         try {
@@ -48,11 +55,14 @@ public class Activity_Listview_Orders extends AppCompatActivity{
         Log.d("Volley1_params", params.toString());
         Connection_Fetch_Orders();
     }
-
-
+    @Override
+    public void onResume(){
+        super.onResume();
+        Connection_Fetch_Orders();
+    }
     public void Connection_Fetch_Orders(){
 
-        final RequestQueue requestQueue = Volley.newRequestQueue(Activity_Listview_Orders.this);
+      //  final RequestQueue requestQueue = Volley.newRequestQueue(Activity_Listview_Orders.this);
         progressBar.setVisibility(View.VISIBLE);
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,params,
                 new Response.Listener<JSONObject>() {
@@ -78,8 +88,15 @@ public class Activity_Listview_Orders extends AppCompatActivity{
                                 id = response.getString("id");
                             }
                             if (response.has("error")) {
-                                id = response.getString("error");
+                                error = response.getString("error");
                             }
+
+                            if(response.has("cookie")){
+                                String cookie1 = response.getString("cookie");
+                                Log.d("Volley1",cookie1);
+                                Log.d("Volley1",cookie);
+                            }
+
                             JSONArray orders ;
                             if (response.has("orders")) {
                                 orders = response.getJSONArray("orders");
@@ -117,7 +134,7 @@ public class Activity_Listview_Orders extends AppCompatActivity{
                                     array_name[i] = name;
                                     array_order_status[i] = order_status;
 
-                                    Log.d("Volley1", error + "" + id + "" + order_id + "" + date_added + "" + currency_code + "" + currency_value + "" + name + "" + order_status + "\n");
+                                  //  Log.d("Volley1", error + "" + id + "" + order_id + "" + date_added + "" + currency_code + "" + currency_value + "" + name + "" + order_status + "\n");
                                     // tv_orderDetails.append("" + id + "" + order_id + "" + date_added + "" + currency_code + "" + currency_value + "" + name + "" + order_status + "\n");
                                 }
 
@@ -154,9 +171,31 @@ public class Activity_Listview_Orders extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT).show();
 //                            Log.d("Volley1",error.getMessage());
             }
-        });
-        requestQueue.add(jsonObjectRequest);
+        }){
+            @Override
+            protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
+                try {
+                    Log.d("Volley1 cookie",cookie);
+                    Log.d("Volley1 full header", String.valueOf(response.headers));
+                    response.headers.put("Set-Cookie",cookie);
+                    Log.d("Volley1", "inside parseNetwork");
+                    String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
+                    Log.d("Volley1 response header",response.headers +"");
+                    Log.d("Volley1 json", json );
+                    return Response.success(new JSONObject(json), HttpHeaderParser.parseCacheHeaders(response));
 
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return Response.error(new ParseError(e));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    return  Response.error(new ParseError(e));
+                }
+            }
+        };
+        //  requestQueue.add(jsonObjectRequest);
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
+
 
 }

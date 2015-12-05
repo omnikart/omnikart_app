@@ -1,4 +1,4 @@
-package com.omnikart.www.omnikartseller;
+package com.omnikart.www.omnikartseller.Adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.android.volley.Response;
+import com.omnikart.www.omnikartseller.R;
 
 import org.json.JSONObject;
 

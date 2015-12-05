@@ -1,4 +1,4 @@
-package com.omnikart.www.omnikartseller;
+package com.omnikart.www.omnikartseller.Fragments.FirstTime;
 
 import android.support.v4.app.Fragment;
 import android.content.Intent;
@@ -8,6 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
+import com.omnikart.www.omnikartseller.Main_Login_Page;
+import com.omnikart.www.omnikartseller.R;
 
 /**
  * Created by Yash Gupta on 28-11-2015.

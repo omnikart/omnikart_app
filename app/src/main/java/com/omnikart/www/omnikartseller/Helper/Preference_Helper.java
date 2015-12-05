@@ -1,4 +1,4 @@
-package com.omnikart.www.omnikartseller;
+package com.omnikart.www.omnikartseller.Helper;
 
 import android.content.Context;
 import android.content.SharedPreferences;
