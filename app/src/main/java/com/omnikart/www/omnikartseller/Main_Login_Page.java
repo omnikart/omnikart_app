@@ -38,12 +38,15 @@ public class Main_Login_Page extends AppCompatActivity{
     CheckBox checkBox;
     JSONObject params;
     String url;
+    String access_token = "";
+    String token_type = "";
     String success="";
     String customerID="";
-   // String cookie = "";
+    String mainheader = "";
     String cookie;
     ProgressBar progressBar;
     Boolean isLoggedIn;
+    Preference_Helper preference_helper;
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -54,10 +57,14 @@ public class Main_Login_Page extends AppCompatActivity{
         show_data = (TextView) findViewById(R.id.textView_query);
         checkBox = (CheckBox) findViewById(R.id.checkBox_keep_me_logged_in);
         progressBar = (ProgressBar) findViewById(R.id.progressBar_login);
-        url ="http://testing.omnikart.com/index.php?route=app/login";
+       url = "http://testing.omnikart.com/index.php?route=rest/login/login";
+       // url ="http://testing.omnikart.com/index.php?route=app/login";
       //  url = "https://www.omnikart.com/index.php?route=app/login";
         params = new JSONObject();
-        final Preference_Helper preference_helper = new Preference_Helper(Main_Login_Page.this);
+         preference_helper = new Preference_Helper(Main_Login_Page.this);
+        access_token = preference_helper.load("access_token","");
+        token_type = preference_helper.load("token_type","");
+        mainheader = token_type+" "+access_token;
         isLoggedIn = preference_helper.load("isLoggedIn",false);
         Log.d("islogged in","is logged is "+isLoggedIn);
         btn_login.setOnClickListener(new View.OnClickListener() {
@@ -67,7 +74,7 @@ public class Main_Login_Page extends AppCompatActivity{
                 preference_helper.save("isLoggedIn",false);
                 Log.d("isloggedin","setting is logged in "+isLoggedIn);
                 try {
-                    params.put("username", username.getText());
+                    params.put("email", username.getText());
                     params.put("password", password.getText());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -79,7 +86,7 @@ public class Main_Login_Page extends AppCompatActivity{
         if (isLoggedIn){
             try {
                 Log.d("islogeedin", "is true");
-                params.put("username", preference_helper.load("username",""));
+                params.put("email", preference_helper.load("username",""));
                 params.put("password", preference_helper.load("password", ""));
              //   preference_helper.save("isLoggedIn", false);
              //   Log.d("isloggedin", "set "+String.valueOf(preference_helper.load("isLoggedIn", false)));
@@ -137,14 +144,24 @@ public class Main_Login_Page extends AppCompatActivity{
                         })
                 {
                     @Override
+                public Map<String,String> getHeaders() throws AuthFailureError{
+                        HashMap<String, String> headers = new HashMap<String, String>();
+                        headers.put("Authorization",mainheader);
+//                    Log.d("Volley cookie", cookie);
+                    Log.d("Volley full header", String.valueOf(headers)+"   ***  dsf");
+                        //headers.put("","");
+                        return headers;
+                    }
+                    /*@Override
         protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                         try {
-                            Log.d("Volley", "inside parseNetwork");
+                            Log.d("Volley1", "inside parseNetwork");
                             String json = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
-                            Log.d("Volley json", json);
-                            Log.d("Volley Set-Cookie", " ####  " + response.headers.get("Set-Cookie"));
-                           cookie = response.headers.get("Set-Cookie") ;
-                            Log.d("Volley full header", String.valueOf(response.headers));
+                            Log.d("Volley1 json", json);
+                            Log.d("Volley1 Set-Cookie", " ####  ");
+                         //   response.headers.put("Authorization",mainheader);
+                            Log.d("Volley1 auth headr",mainheader);
+                            Log.d("Volley1 full header", String.valueOf(response.headers));
                             return Response.success(new JSONObject(json), HttpHeaderParser.parseCacheHeaders(response));
 
                         } catch (UnsupportedEncodingException e) {
@@ -153,25 +170,17 @@ public class Main_Login_Page extends AppCompatActivity{
                         } catch (JSONException e) {
                             e.printStackTrace();
                             return  Response.error(new ParseError(e));
-                        }
-                    }
-                    //@Override
-                /*public Map<String,String> getHeader() throws AuthFailureError{
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                       // cookie = headers.get("Set-Cookie");
-                    Log.d("Volley cookie", cookie);
-                    Log.d("Volley full header", String.valueOf(headers)+"   ***  dsf");
-                        //headers.put("","");
-                        return headers;
-                    }*/
-        };
+                        }}*/
+                    };
+
+
 
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
 
 
     public void LogIn(String req){
-        if(req.equals("1")){
+        if(req.equals("true")){
             Intent intent = new Intent(Main_Login_Page.this,Activity_Listview_Orders.class);
             Bundle bundle =new Bundle();
             bundle.putString("customer_id", customerID);
