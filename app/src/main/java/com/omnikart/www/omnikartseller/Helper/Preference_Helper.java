@@ -1,5 +1,6 @@
 package com.omnikart.www.omnikartseller.Helper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.Editable;

@@ -15,13 +15,17 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.omnikart.www.omnikartseller.Helper.Authorization;
 import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
+import com.omnikart.www.omnikartseller.Network.Volley.ApiHelper;
+import com.omnikart.www.omnikartseller.Network.Volley.VolleyApiListeners;
+import com.omnikart.www.omnikartseller.Network.Volley.VolleyRequest;
 import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,7 +35,7 @@ import java.util.Map;
 
 
 public class Main_Login_Page extends AppCompatActivity{
-    EditText username;
+    EditText email;
     EditText password;
     Button btn_login;
     TextView show_data;
@@ -41,9 +45,7 @@ public class Main_Login_Page extends AppCompatActivity{
     String access_token = "";
     String token_type = "";
     String success="";
-    String customerID="";
-    String mainheader = "";
-    String cookie;
+    String authorization = "";
     ProgressBar progressBar;
     Boolean isLoggedIn;
     Preference_Helper preference_helper;
@@ -51,20 +53,18 @@ public class Main_Login_Page extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_login_page);
-        username = (EditText) findViewById(R.id.editText_username);
+        email = (EditText) findViewById(R.id.editText_email);
         password = (EditText) findViewById(R.id.editText_password);
         btn_login = (Button) findViewById(R.id.button_loginpage);
         show_data = (TextView) findViewById(R.id.textView_query);
         checkBox = (CheckBox) findViewById(R.id.checkBox_keep_me_logged_in);
         progressBar = (ProgressBar) findViewById(R.id.progressBar_login);
-       url = "http://testing.omnikart.com/index.php?route=rest/login/login";
-       // url ="http://testing.omnikart.com/index.php?route=app/login";
-      //  url = "https://www.omnikart.com/index.php?route=app/login";
+        url = "http://testing.omnikart.com/index.php?route=rest/login/login";
         params = new JSONObject();
-         preference_helper = new Preference_Helper(Main_Login_Page.this);
-        access_token = preference_helper.load("access_token","");
-        token_type = preference_helper.load("token_type","");
-        mainheader = token_type+" "+access_token;
+        Authorization auth = new Authorization(Main_Login_Page.this);
+        authorization= auth.getAuthorization();
+        Log.d("Voleey 1 Auth",authorization);
+        preference_helper = new Preference_Helper(Main_Login_Page.this);
         isLoggedIn = preference_helper.load("isLoggedIn",false);
         Log.d("islogged in","is logged is "+isLoggedIn);
         btn_login.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class Main_Login_Page extends AppCompatActivity{
                 preference_helper.save("isLoggedIn",false);
                 Log.d("isloggedin","setting is logged in "+isLoggedIn);
                 try {
-                    params.put("email", username.getText());
+                    params.put("email", email.getText());
                     params.put("password", password.getText());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -86,10 +86,8 @@ public class Main_Login_Page extends AppCompatActivity{
         if (isLoggedIn){
             try {
                 Log.d("islogeedin", "is true");
-                params.put("email", preference_helper.load("username",""));
+                params.put("email", preference_helper.load("email",""));
                 params.put("password", preference_helper.load("password", ""));
-             //   preference_helper.save("isLoggedIn", false);
-             //   Log.d("isloggedin", "set "+String.valueOf(preference_helper.load("isLoggedIn", false)));
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -104,25 +102,70 @@ public class Main_Login_Page extends AppCompatActivity{
 
     public void ConnectionLogIn() {
 
-      //  final RequestQueue requestQueue = Volley.newRequestQueue(Main_Login_Page.this);
+        show_data.append(params.toString());
+        progressBar.setVisibility(View.VISIBLE);
+        /*ApiHelper.makeRequest(Request.Method.POST, url,params, new VolleyApiListeners() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Volley 1","Site not accessed");
+                // Log.d("Volley 1",error.getMessage());
+                Toast.makeText(getApplicationContext(),"Error in connection",Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+            }
 
-                show_data.append(params.toString());
-                progressBar.setVisibility(View.VISIBLE);
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, params,
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response.has("success")) {
+                        success = response.getString("success");  }
+                    if (response.has("error")) {
+                        Log.d("vo","v");
+                        Log.d("Volley 1 error",response.getString("error")); }
+                    if(response.has("data")) {
+                        JSONObject data = response.getJSONObject("data");
+                        String[] data_array = new String[]{"customer_id","customer_group_id","store_id",
+                                "firstname","lastname","email","telephone","fax","cart","wishlist","newsletter",
+                                "address_id","ip","status","approved","safe","date_added","session","custom_fields",
+                                "account_custom_field"};
+                        for (int i=0;i<data_array.length;i++){
+                            if (data.has(data_array[i])){
+                                preference_helper.save(data_array[i],data.getString(data_array[i]));
+                            } }  }
+                    Log.d("Volley 1","Site accessed");
+                    Log.d("Volley 1", success );
+
+                    LogIn(success);
+                    progressBar.setVisibility(View.GONE);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        });*/
+
+               JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, params,
                         new Response.Listener<JSONObject>() {
                             @Override
                             public void onResponse(JSONObject response) {
                                 try {
-                                    String cookie = "";
                                     if (response.has("success")) {
                                         success = response.getString("success");  }
-                                    if (response.has("cookie")) {
-                                        cookie = response.getString("cookie");   }
-                                    if (response.has("customer_id")) {
-                                        customerID = response.getString("customer_id");  }
-                                    Log.d("Volley","Site accessed");
-
-                                    Log.d("Volley", success + "   1st   \n" + cookie + "    2nd     \n"+customerID);
+                                    if (response.has("error")) {
+                                        Log.d("vo","v");
+                                        Log.d("Volley 1 error",response.getString("error")); }
+                                    if(response.has("data")) {
+                                        JSONObject data = response.getJSONObject("data");
+                                        String[] data_array = new String[]{"customer_id","customer_group_id","store_id",
+                                        "firstname","lastname","email","telephone","fax","cart","wishlist","newsletter",
+                                        "address_id","ip","status","approved","safe","date_added","session","custom_fields",
+                                        "account_custom_field"};
+                                        for (int i=0;i<data_array.length;i++){
+                                            if (data.has(data_array[i])){
+                                                preference_helper.save(data_array[i],data.getString(data_array[i]));
+                                            } }  }
+                                    Log.d("Volley 1","Site accessed");
+                                    Log.d("Volley 1", success );
 
                                     LogIn(success);
                                     progressBar.setVisibility(View.GONE);
@@ -136,8 +179,8 @@ public class Main_Login_Page extends AppCompatActivity{
                         new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                Log.d("Volley","Site not accessed");
-                                // Log.d("Volley",error.getMessage());
+                                Log.d("Volley 1","Site not accessed");
+                                // Log.d("Volley 1",error.getMessage());
                                 Toast.makeText(getApplicationContext(),"Error in connection",Toast.LENGTH_SHORT).show();
                                 progressBar.setVisibility(View.GONE);
                             }
@@ -146,21 +189,17 @@ public class Main_Login_Page extends AppCompatActivity{
                     @Override
                 public Map<String,String> getHeaders() throws AuthFailureError{
                         HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("Authorization",mainheader);
-//                    Log.d("Volley cookie", cookie);
-                    Log.d("Volley full header", String.valueOf(headers)+"   ***  dsf");
-                        //headers.put("","");
+                        headers.put("Authorization", authorization);
+                        Log.d("Volley 1 Auth new",authorization);
+                        Log.d("Volley 1 full header", String.valueOf(headers)+"###");
                         return headers;
                     }
-                    /*@Override
+                    @Override
         protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
                         try {
                             Log.d("Volley1", "inside parseNetwork");
-                            String json = new String(response.data,HttpHeaderParser.parseCharset(response.headers));
+                            String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
                             Log.d("Volley1 json", json);
-                            Log.d("Volley1 Set-Cookie", " ####  ");
-                         //   response.headers.put("Authorization",mainheader);
-                            Log.d("Volley1 auth headr",mainheader);
                             Log.d("Volley1 full header", String.valueOf(response.headers));
                             return Response.success(new JSONObject(json), HttpHeaderParser.parseCacheHeaders(response));
 
@@ -170,11 +209,8 @@ public class Main_Login_Page extends AppCompatActivity{
                         } catch (JSONException e) {
                             e.printStackTrace();
                             return  Response.error(new ParseError(e));
-                        }}*/
+                        }}
                     };
-
-
-
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
 
@@ -182,19 +218,13 @@ public class Main_Login_Page extends AppCompatActivity{
     public void LogIn(String req){
         if(req.equals("true")){
             Intent intent = new Intent(Main_Login_Page.this,Activity_Listview_Orders.class);
-            Bundle bundle =new Bundle();
-            bundle.putString("customer_id", customerID);
-            bundle.putString("Cookie",cookie);
-            intent.putExtras(bundle);
-
             Log.d("Location", "new activity");
-            Log.d("Volley log cookie act 1",cookie+"test");
-            Preference_Helper pref = new Preference_Helper(Main_Login_Page.this);
+
           if (checkBox.isChecked()){
            if(!isLoggedIn){
-            pref.save("isLoggedIn",true);
-            pref.save("username", username.getText().toString());
-            pref.save("password",password.getText().toString());
+            preference_helper.save("isLoggedIn",true);
+            preference_helper.save("email", email.getText().toString());
+            preference_helper.save("password",password.getText().toString());
             Log.d("islogeedin", "original data saved");}}
             Main_Login_Page.this.startActivity(intent);
             Main_Login_Page.this.finish();
@@ -206,7 +236,4 @@ public class Main_Login_Page extends AppCompatActivity{
             Log.d("isloggedin","is logged in is "+isLoggedIn);
         }
     }
-
-
-
 }
