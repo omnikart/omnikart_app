@@ -143,6 +143,7 @@ public class Main_Login_Page extends AppCompatActivity{
                 }
             }
         });*/
+/*
 
                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, params,
                         new Response.Listener<JSONObject>() {
@@ -213,7 +214,49 @@ public class Main_Login_Page extends AppCompatActivity{
                     };
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
     }
+*/
+        VolleySingleton volleySingleton = new VolleySingleton(Main_Login_Page.this);
+        volleySingleton.postWithParams(url, params, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if (response.has("success")) {
+                        success = response.getString("success");  }
+                    if (response.has("error")) {
+                        Log.d("vo","v");
+                        Log.d("Volley 1 error",response.getString("error")); }
+                    if(response.has("data")) {
+                        JSONObject data = response.getJSONObject("data");
+                        String[] data_array = new String[]{"customer_id","customer_group_id","store_id",
+                                "firstname","lastname","email","telephone","fax","cart","wishlist","newsletter",
+                                "address_id","ip","status","approved","safe","date_added","session","custom_fields",
+                                "account_custom_field"};
+                        for (int i=0;i<data_array.length;i++){
+                            if (data.has(data_array[i])){
+                                preference_helper.save(data_array[i],data.getString(data_array[i]));
+                            } }  }
+                    Log.d("Volley 1","Site accessed");
+                    Log.d("Volley 1", success );
 
+                    LogIn(success);
+                    progressBar.setVisibility(View.GONE);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Volley 1","Site not accessed");
+                // Log.d("Volley 1",error.getMessage());
+                Toast.makeText(getApplicationContext(),"Error in connection",Toast.LENGTH_SHORT).show();
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+    }
 
     public void LogIn(String req){
         if(req.equals("true")){

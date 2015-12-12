@@ -45,7 +45,7 @@ public class Auth_Token extends AppCompatActivity{
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,url,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST,url,params,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
