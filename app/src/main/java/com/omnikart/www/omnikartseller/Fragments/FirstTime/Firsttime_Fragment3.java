@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.omnikart.www.omnikartseller.Engine.Auth_Token;
+import com.omnikart.www.omnikartseller.Engine.Background_Task;
 import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
 import com.omnikart.www.omnikartseller.Main_Login_Page;
 import com.omnikart.www.omnikartseller.R;
@@ -28,12 +29,10 @@ public class Firsttime_Fragment3 extends Fragment {
         login_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity().getApplicationContext(), "Button Clicked", Toast.LENGTH_SHORT).show();
-                Auth_Token auth_token = new Auth_Token(getActivity());
-                Preference_Helper prefs = new Preference_Helper(getActivity());
+                Toast.makeText(getContext(), "Button Clicked", Toast.LENGTH_SHORT).show();
+                Preference_Helper prefs = new Preference_Helper(getContext());
                 prefs.save("isClicked", true);
-                Intent i = new Intent(getActivity(),Main_Login_Page.class);
-                startActivity(i);
+                Background_Task background_task = new Background_Task(getContext());
                 getActivity().finish();
                 }
         });

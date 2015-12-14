@@ -104,119 +104,9 @@ public class Main_Login_Page extends AppCompatActivity{
 
         show_data.append(params.toString());
         progressBar.setVisibility(View.VISIBLE);
-        /*ApiHelper.makeRequest(Request.Method.POST, url,params, new VolleyApiListeners() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Volley 1","Site not accessed");
-                // Log.d("Volley 1",error.getMessage());
-                Toast.makeText(getApplicationContext(),"Error in connection",Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE);
-            }
 
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    if (response.has("success")) {
-                        success = response.getString("success");  }
-                    if (response.has("error")) {
-                        Log.d("vo","v");
-                        Log.d("Volley 1 error",response.getString("error")); }
-                    if(response.has("data")) {
-                        JSONObject data = response.getJSONObject("data");
-                        String[] data_array = new String[]{"customer_id","customer_group_id","store_id",
-                                "firstname","lastname","email","telephone","fax","cart","wishlist","newsletter",
-                                "address_id","ip","status","approved","safe","date_added","session","custom_fields",
-                                "account_custom_field"};
-                        for (int i=0;i<data_array.length;i++){
-                            if (data.has(data_array[i])){
-                                preference_helper.save(data_array[i],data.getString(data_array[i]));
-                            } }  }
-                    Log.d("Volley 1","Site accessed");
-                    Log.d("Volley 1", success );
-
-                    LogIn(success);
-                    progressBar.setVisibility(View.GONE);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    progressBar.setVisibility(View.GONE);
-                }
-            }
-        });*/
-/*
-
-               JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url, params,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                try {
-                                    if (response.has("success")) {
-                                        success = response.getString("success");  }
-                                    if (response.has("error")) {
-                                        Log.d("vo","v");
-                                        Log.d("Volley 1 error",response.getString("error")); }
-                                    if(response.has("data")) {
-                                        JSONObject data = response.getJSONObject("data");
-                                        String[] data_array = new String[]{"customer_id","customer_group_id","store_id",
-                                        "firstname","lastname","email","telephone","fax","cart","wishlist","newsletter",
-                                        "address_id","ip","status","approved","safe","date_added","session","custom_fields",
-                                        "account_custom_field"};
-                                        for (int i=0;i<data_array.length;i++){
-                                            if (data.has(data_array[i])){
-                                                preference_helper.save(data_array[i],data.getString(data_array[i]));
-                                            } }  }
-                                    Log.d("Volley 1","Site accessed");
-                                    Log.d("Volley 1", success );
-
-                                    LogIn(success);
-                                    progressBar.setVisibility(View.GONE);
-
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                    progressBar.setVisibility(View.GONE);
-                                }
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Volley 1","Site not accessed");
-                                // Log.d("Volley 1",error.getMessage());
-                                Toast.makeText(getApplicationContext(),"Error in connection",Toast.LENGTH_SHORT).show();
-                                progressBar.setVisibility(View.GONE);
-                            }
-                        })
-                {
-                    @Override
-                public Map<String,String> getHeaders() throws AuthFailureError{
-                        HashMap<String, String> headers = new HashMap<String, String>();
-                        headers.put("Authorization", authorization);
-                        Log.d("Volley 1 Auth new",authorization);
-                        Log.d("Volley 1 full header", String.valueOf(headers)+"###");
-                        return headers;
-                    }
-                    @Override
-        protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
-                        try {
-                            Log.d("Volley1", "inside parseNetwork");
-                            String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                            Log.d("Volley1 json", json);
-                            Log.d("Volley1 full header", String.valueOf(response.headers));
-                            return Response.success(new JSONObject(json), HttpHeaderParser.parseCacheHeaders(response));
-
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                            return Response.error(new ParseError(e));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            return  Response.error(new ParseError(e));
-                        }}
-                    };
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-    }
-*/
         VolleySingleton volleySingleton = new VolleySingleton(Main_Login_Page.this);
-        volleySingleton.postWithParams(url, params, new Response.Listener<JSONObject>() {
+        volleySingleton.postWithHeadersWithParams(url, params, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -260,7 +150,7 @@ public class Main_Login_Page extends AppCompatActivity{
 
     public void LogIn(String req){
         if(req.equals("true")){
-            Intent intent = new Intent(Main_Login_Page.this,Activity_Listview_Orders.class);
+            Intent intent = new Intent(Main_Login_Page.this,Front_Page.class);
             Log.d("Location", "new activity");
 
           if (checkBox.isChecked()){

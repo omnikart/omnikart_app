@@ -7,7 +7,7 @@ import android.util.Log;
 import com.omnikart.www.omnikartseller.Activity_Listview_Orders;
 import com.omnikart.www.omnikartseller.Main_Login_Page;
 
-public class Authorization extends AppCompatActivity{
+public class Authorization {
 
     String authorization;
     Preference_Helper preference_helper;

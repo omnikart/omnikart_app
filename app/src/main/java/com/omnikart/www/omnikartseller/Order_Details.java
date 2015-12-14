@@ -21,39 +21,32 @@ import org.json.JSONObject;
 
 public class Order_Details extends AppCompatActivity {
     TextView order_details;
-    JSONObject params;
     String order_id;
     String url;
+    String finalUrl;
     ProgressBar progressBar;
         protected void onCreate(Bundle savedInstanceState){
             super.onCreate(savedInstanceState);
             setContentView(R.layout.order_details);
             Bundle bundle =getIntent().getExtras();
             order_id =  bundle.getString("order_id");
-            String customer_id = bundle.getString("customer_id");
             order_details =(TextView) findViewById(R.id.textView_orderdetails);
-            url ="http://testing.omnikart.com/index.php?route=app/customerpartner/order/orderinfo";
+            url ="http://testing.omnikart.com/index.php?route=rest/order/orders&id=";
+            finalUrl = url + order_id;
             progressBar = (ProgressBar) findViewById(R.id.progressBar_orders_details);
-            params = new JSONObject();
-            try {
-                params.put("customer_id",customer_id);
-                params.put("order_id",order_id);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.d("volley2", params.toString());
             Connection_Fetch_Order_Details();
         }
 
         public void Connection_Fetch_Order_Details(){
 
             progressBar.setVisibility(View.VISIBLE);
-            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,params,
+            VolleySingleton volleySingleton = new VolleySingleton(Order_Details.this);
+            volleySingleton.getWithHeaders(finalUrl,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d("Volley2", "Connection Done");
-                            String id = "";
+                            String success = "";
                             String invoice_no = "";
                             String invoice_prefix = "";
                             String store_id  = "";
@@ -116,12 +109,12 @@ public class Order_Details extends AppCompatActivity {
                             String product_total = "";
 
                             try {
-                                if (response.has("id")) {
-                                    id = response.getString("id");   }
+                                if (response.has("success")) {
+                                    success = response.getString("success");   }
 
                                 JSONObject orderinfo ;
-                                if (response.has("orderinfo")){
-                                    orderinfo = response.getJSONObject("orderinfo");
+                                if (response.has("data")){
+                                    orderinfo = response.getJSONObject("data");
                                     if(orderinfo.has("invoice_no")){invoice_no = orderinfo.getString("invoice_no"); }
                                     if(orderinfo.has("invoice_prefix")){invoice_prefix = orderinfo.getString("invoice_prefix"); }
                                     if(orderinfo.has("store_id")){store_id = orderinfo.getString("store_id"); }
@@ -176,7 +169,7 @@ public class Order_Details extends AppCompatActivity {
                                     if(orderinfo.has("ip")){ip = orderinfo.getString("ip"); }
                                 }
 
-                                order_details.append("\n"+id+"\n"+order_id+"\n"+invoice_no+"\n"+invoice_prefix+"\n"+store_id+"\n"
+                                order_details.append("\n"+success+"\n"+order_id+"\n"+invoice_no+"\n"+invoice_prefix+"\n"+store_id+"\n"
                                         +store_name+"\n"+store_url+"\n"+firstname+"\n"+lastname+"\n"+telephone+"\n"
                                         +fax+"\n"+email+"\n"+payment_firstname+"\n"+payment_lastname+"\n"+payment_company+"\n"
                                         +payment_address_1+"\n"+payment_address_2+"\n"+payment_postcode+"\n"+payment_city+"\n"
@@ -222,8 +215,7 @@ public class Order_Details extends AppCompatActivity {
                         }
                     }
             );
-            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
-        }
+                  }
 
 }
 

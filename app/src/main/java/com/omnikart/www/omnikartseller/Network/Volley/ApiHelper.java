@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.android.volley.DefaultRetryPolicy;
-import com.omnikart.www.omnikartseller.Utils.ServerRequestUtils;
 
 import org.json.JSONObject;
 

@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Created by Yash Gupta on 07-12-2015.
  */
-public class Auth_Token extends AppCompatActivity{
+public class Auth_Token {
     String url;
     Preference_Helper prefs;
     public Auth_Token(final Context context){

@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
@@ -51,140 +53,132 @@ public class Activity_Listview_Orders extends AppCompatActivity{
         Log.d("Volley 2 New Auth",authorization);
         Connection_Fetch_Orders();
     }
-   /* @Override
+   @Override
     public void onResume(){
         super.onResume();
         Connection_Fetch_Orders();
-    }*/
-    public void Connection_Fetch_Orders(){
+    }
+    public void Connection_Fetch_Orders() {
 
         progressBar.setVisibility(View.VISIBLE);
-        StringRequest jsonObjectRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
+        VolleySingleton volleySingleton = new VolleySingleton(Activity_Listview_Orders.this);
+        volleySingleton.getWithHeaders(url, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String responseR) {
+            public void onResponse(JSONObject response) {
 
-                        String order_id = "";
-                        String date_added = "";
-                        String currency_code = "";
-                        String currency_value = "";
-                        String name = "";
-                        String order_status ="";
-                        String error = "";
-                        String success = "";
-                        String[] array_order_id = new String[0];
-                        String[] array_date_added = new String[0];
-                        String[] array_currency_code = new String[0];
-                        String[] array_currency_value = new String[0];
-                        String[] array_name = new String[0];
-                        String[] array_order_status = new String[0];
-                JSONObject response;
+                String order_id = "";
+                String date_added = "";
+                String currency_code = "";
+                String currency_value = "";
+                String name = "";
+                String order_status = "";
+                String error = "";
+                String success = "";
+                String[] array_order_id = new String[0];
+                String[] array_date_added = new String[0];
+                String[] array_currency_code = new String[0];
+                String[] array_currency_value = new String[0];
+                String[] array_name = new String[0];
+                String[] array_order_status = new String[0];
+
                 try {
-                    response = new JSONObject(responseR);
-
-
-                            if (response.has("success")) {
-                                success = response.getString("success");
-                            Log.d("Volley 2 success",success);}
-                            if (response.has("error")) {
-                                error = response.getString("error");
-                            Log.d("Volley 2 error",error);   }
-                    if(response.has("data")) {
+                    if (response.has("success")) {
+                        success = response.getString("success");
+                        Log.d("Volley 2 success", success);
+                    }
+                    if (response.has("error")) {
+                        error = response.getString("error");
+                        Log.d("Volley 2 error", error);
+                    }
+                    if (response.has("data")) {
                         JSONObject data = response.getJSONObject("data");
-                            JSONArray orders ;
-                            if (data.has("orders")) {
-                                orders = data.getJSONArray("orders");
-                                array_order_id = new String[orders.length()];
-                                array_date_added = new String[orders.length()];
-                                array_currency_code = new String[orders.length()];
-                                array_currency_value = new String[orders.length()];
-                                array_name = new String[orders.length()];
-                                array_order_status = new String[orders.length()];
-                                for (int i = 0; i < orders.length(); i++) {
-                                    JSONObject order_details = orders.getJSONObject(i);
-                                    if (order_details.has("order_id")) {
-                                        order_id = order_details.getString("order_id");
-                                    }
-                                    if (order_details.has("date_added")) {
-                                        date_added = order_details.getString("date_added");
-                                    }
-                                    if (order_details.has("currency_code")) {
-                                        currency_code = order_details.getString("currency_code");
-                                    }
-                                    if (order_details.has("currency_value")) {
-                                        currency_value = order_details.getString("currency_value");
-                                    }
-                                    if (order_details.has("name")) {
-                                        name = order_details.getString("name");
-                                    }
-                                    if (order_details.has("orderstatus")) {
-                                        order_status = order_details.getString("orderstatus");
-                                    }
-                                    // Creating Arrays
-                                    array_order_id[i] = order_id;
-                                    array_date_added[i] = date_added;
-                                    array_currency_code[i] = currency_code;
-                                    array_currency_value[i] = currency_value;
-                                    array_name[i] = name;
-                                    array_order_status[i] = order_status;
+                        JSONArray orders;
+                        if (data.has("orders")) {
+                            orders = data.getJSONArray("orders");
+                            array_order_id = new String[orders.length()];
+                            array_date_added = new String[orders.length()];
+                            array_currency_code = new String[orders.length()];
+                            array_currency_value = new String[orders.length()];
+                            array_name = new String[orders.length()];
+                            array_order_status = new String[orders.length()];
+                            for (int i = 0; i < orders.length(); i++) {
+                                JSONObject order_details = orders.getJSONObject(i);
+                                if (order_details.has("order_id")) {
+                                    order_id = order_details.getString("order_id");
                                 }
-
-                            }}
-                            progressBar.setVisibility(View.GONE);
-                            ListView_Orders_Adapter adapter = new ListView_Orders_Adapter(Activity_Listview_Orders.this, array_order_id, array_date_added, array_currency_code, array_currency_value, array_name, array_order_status);
-                            list.setAdapter(adapter);
-                            final String[] finalArray_order_id = array_order_id;
-                            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                    Log.d("ITEM", finalArray_order_id[position]);
-                                    Log.d("ITEM", String.valueOf(id));
-                                    Intent intent = new Intent(Activity_Listview_Orders.this,Order_Details.class);
-                                    Bundle bundle =new Bundle();
-                                    bundle.putString("order_id", finalArray_order_id[position]);
-                                    intent.putExtras(bundle);
-                                    startActivity(intent);
+                                if (order_details.has("date_added")) {
+                                    date_added = order_details.getString("date_added");
                                 }
-                            });
+                                if (order_details.has("currency_code")) {
+                                    currency_code = order_details.getString("currency_code");
+                                }
+                                if (order_details.has("currency_value")) {
+                                    currency_value = order_details.getString("currency_value");
+                                }
+                                if (order_details.has("name")) {
+                                    name = order_details.getString("name");
+                                }
+                                if (order_details.has("orderstatus")) {
+                                    order_status = order_details.getString("orderstatus");
+                                }
+                                // Creating Arrays
+                                array_order_id[i] = order_id;
+                                array_date_added[i] = date_added;
+                                array_currency_code[i] = currency_code;
+                                array_currency_value[i] = currency_value;
+                                array_name[i] = name;
+                                array_order_status[i] = order_status;
+                            }
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            progressBar.setVisibility(View.GONE);
                         }
                     }
-                },       new Response.ErrorListener() {
+                    progressBar.setVisibility(View.GONE);
+                    ListView_Orders_Adapter adapter = new ListView_Orders_Adapter(Activity_Listview_Orders.this, array_order_id, array_date_added, array_currency_code, array_currency_value, array_name, array_order_status);
+                    list.setAdapter(adapter);
+                    final String[] finalArray_order_id = array_order_id;
+                    list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            Log.d("ITEM", finalArray_order_id[position]);
+                            Log.d("ITEM", String.valueOf(id));
+                            Intent intent = new Intent(Activity_Listview_Orders.this, Order_Details.class);
+                            Bundle bundle = new Bundle();
+                            bundle.putString("order_id", finalArray_order_id[position]);
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                    progressBar.setVisibility(View.GONE);
+                }
+            }
+        }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("Volley2","No connection");
+                Log.d("Volley2", "No connection");
                 progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), "Connection Error", Toast.LENGTH_SHORT).show();
             }
-        }){
-            @Override
-            protected Response<String> parseNetworkResponse(NetworkResponse response) {
-            try {
-                Log.d("Volley2", "inside parseNetwork");
-                String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
-                Log.d("Volley2 json", json);
-                Log.d("Volley2 full header", String.valueOf(response.headers));
-               set_cookie= response.headers.get("Set-Cookie");
-                return Response.success(json, HttpHeaderParser.parseCacheHeaders(response));
+        });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity__fragments__firsttime, menu);
+        return true;
+    }
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return Response.error(new ParseError(e));
-            }
-            }
-
-            @Override
-            public Map<String,String> getHeaders() throws AuthFailureError {
-            HashMap<String, String> headers = new HashMap<String, String>();
-            headers.put("Authorization", authorization);
-           // headers.put("Set-Cookie",set_cookie);
-            Log.d("Volley 2 full header", String.valueOf(headers)+"###");
-            return headers;
-            }
-        };
-        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(jsonObjectRequest);
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar actions click
+        switch (item.getItemId()) {
+            case R.id.action_close:
+                finish();
+                //  return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 
