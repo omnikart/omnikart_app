@@ -20,8 +20,9 @@ import org.json.JSONObject;
  * Created by Yash Gupta on 14-12-2015.
  */
 public class Background_Task {
-
+Context mContext;
       public Background_Task(final Context context) {
+          this.mContext = context;
         String url = "http://testing.omnikart.com/index.php?route=rest/tokencheck/check";
             // Token check
             VolleySingleton volleySingleton = new VolleySingleton(context);
@@ -35,14 +36,15 @@ public class Background_Task {
                             Log.d("Volley main success", success);
                             if (success.equals("true")) {
                                 Log.d("Volley main success", "starting main login");
-                                Intent i = new Intent(context, Main_Login_Page.class);
-                                ((Activity)context).startActivity(i);
-                                ((Activity)context).finish();
+                                Background_Login background_login = new Background_Login(mContext);
+                                /*Intent i = new Intent(mContext, Background_Login.class);
+                                mContext.startActivity(i);*/
+                               // ((Activity)context).finish();
 
                             } else {
                                 Log.d("Volley main success", "starting auth");
-                                Auth_Token auth_token = new Auth_Token(context);
-                                ((Activity)context).finish();
+                                Auth_Token auth_token = new Auth_Token(mContext);
+                               // ((Activity)context).finish();
                             }
                         }
 
@@ -53,9 +55,10 @@ public class Background_Task {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(context, "Please check your internet connection", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(context, Activity_Error.class);
-                    ((Activity)context).startActivity(intent);
+                    Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(mContext, Activity_Error.class);
+                    mContext.startActivity(intent);
+                    ((Activity) context).finish();
                 }
             });
         }

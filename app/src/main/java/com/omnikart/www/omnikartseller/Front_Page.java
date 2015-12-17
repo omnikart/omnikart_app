@@ -1,5 +1,7 @@
 package com.omnikart.www.omnikartseller;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -13,7 +15,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
+
 import com.omnikart.www.omnikartseller.Adapters.NavDrawerListAdapter;
+import com.omnikart.www.omnikartseller.Fragments.FrontPage.AboutUs;
+import com.omnikart.www.omnikartseller.Fragments.FrontPage.AccountsFragment;
+import com.omnikart.www.omnikartseller.Fragments.FrontPage.HomeFragment;
 import com.omnikart.www.omnikartseller.Helper.NavDrawerItem;
 import java.util.ArrayList;
 
@@ -21,13 +28,17 @@ public class Front_Page extends AppCompatActivity{
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
-
+    private static final int TIME_INTERVAL = 2000; // # milliseconds, desired time passed between two back presses.
+    private long mBackPressed;
+    private int mPosition=0;
+    private Boolean inFragment = false;
+    String[] navMenuTitles;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_navigation_drawer);
 
-        String[] navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
+        navMenuTitles = getResources().getStringArray(R.array.nav_drawer_items);
         // nav drawer icons from resources
         TypedArray navMenuIcons = getResources().obtainTypedArray(R.array.nav_drawer_icons);
 
@@ -38,17 +49,18 @@ public class Front_Page extends AppCompatActivity{
         // adding nav drawer items to array
         // Home
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[0], navMenuIcons.getResourceId(0, -1)));
-        //
+        //My Account
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[1], navMenuIcons.getResourceId(1, -1)));
-        //
+        //Order History
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[2], navMenuIcons.getResourceId(2, -1)));
-        //
+        //Transactions
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[3], navMenuIcons.getResourceId(3, -1), true, "22"));
-        //
+        //My Products
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[4], navMenuIcons.getResourceId(4, -1)));
-        //
+        //Ask to admin
         navDrawerItems.add(new NavDrawerItem(navMenuTitles[5], navMenuIcons.getResourceId(5, -1)));
-
+        //About Us
+        navDrawerItems.add(new NavDrawerItem(navMenuTitles[6], navMenuIcons.getResourceId(6, -1)));
         // Recycle the typed array
         navMenuIcons.recycle();
         // setting the nav drawer list adapter
@@ -83,23 +95,32 @@ public class Front_Page extends AppCompatActivity{
         mDrawerList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mPosition = position;
+                Log.d("mposition insideonclick", String.valueOf(mPosition)+inFragment);
                 displayView(position);
+
             }
         });
     }
      public void displayView(int position) {
         // update the main content by replacing fragments
-        //Fragment fragment = null;
+        Fragment fragment = null;
+
         switch (position) {
             case 0:
                 mDrawerLayout.closeDrawers();
-                //   fragment = new HomeFragment();
+                   fragment = new HomeFragment();
                 break;
             case 1:
-                //   fragment = new FindPeopleFragment();
+                   fragment = new AccountsFragment();
+                mDrawerLayout.closeDrawers();
                 break;
             case 2:
+                fragment = null;
+                inFragment = false;
                 mDrawerLayout.closeDrawers();
+               // mPosition=0;
+                Log.d("mposition inswitch", String.valueOf(mPosition)+inFragment);
                 Intent intent = new Intent(Front_Page.this,Activity_Listview_Orders.class);
                 startActivity(intent);
 
@@ -107,18 +128,38 @@ public class Front_Page extends AppCompatActivity{
                 break;
             case 3:
                 //  fragment = new CommunityFragment();
+                mDrawerLayout.closeDrawers();
                 break;
             case 4:
                 //  fragment = new PagesFragment();
+                mDrawerLayout.closeDrawers();
                 break;
             case 5:
-                //  fragment = new WhatsHotFragment();
+                fragment = new AboutUs();
+                break;
+            case 6:
+                  fragment = new AboutUs();
                 break;
 
             default:
 
                 break;
-    }}
+    } if (fragment != null) {
+             FragmentManager fragmentManager = getFragmentManager();
+             fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
+            inFragment = true;
+             // update selected item and title, then close the drawer
+             mDrawerList.setItemChecked(position, true);
+             mDrawerList.setSelection(position);
+             Log.d("mposition infragment", String.valueOf(position) + inFragment);
+             setTitle(navMenuTitles[position]);
+             mDrawerLayout.closeDrawer(mDrawerList);
+         } else {
+             // error in creating fragment
+             Log.e("MainActivity", "Error in creating fragment");
+         }
+     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -152,22 +193,6 @@ public class Front_Page extends AppCompatActivity{
         return super.onPrepareOptionsMenu(menu);
     }
 
-
-       /* if (fragment != null) {
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction().replace(R.id.frame_container, fragment).commit();
-
-            // update selected item and title, then close the drawer
-            mDrawerList.setItemChecked(position, true);
-            mDrawerList.setSelection(position);
-            setTitle(navMenuTitles[position]);
-            mDrawerLayout.closeDrawer(mDrawerList);
-        } else {
-            // error in creating fragment
-            Log.e("MainActivity", "Error in creating fragment");
-        }*/
-
-
     /**
      * When using the ActionBarDrawerToggle, you must call it during
      * onPostCreate() and onConfigurationChanged()...
@@ -186,4 +211,31 @@ public class Front_Page extends AppCompatActivity{
         // Pass any configuration change to the drawer toggls
         mDrawerToggle.onConfigurationChanged(newConfig);
     }
+    @Override
+    public void onBackPressed() {
+
+       Log.d("mposition", String.valueOf(mPosition)+inFragment);
+       // int i = mPosition ;
+        if (mDrawerLayout.isDrawerOpen(mDrawerList)) {
+            mDrawerLayout.closeDrawers();
+        }
+        if ((mPosition!= 0)|| !inFragment) {
+            mPosition = 0;
+            inFragment = true;
+            Log.d("mposition set","as 0 true");
+            displayView(0);
+        }
+        if (mPosition==0) {
+            if (mBackPressed + TIME_INTERVAL > System.currentTimeMillis()) {
+                Log.d("time", String.valueOf(mBackPressed));
+                super.onBackPressed();
+                return;
+            } else {
+                Toast.makeText(getBaseContext(), "Tap back button in order to exit", Toast.LENGTH_SHORT).show();
+            }
+
+            mBackPressed = System.currentTimeMillis();
+            Log.d("time", String.valueOf(mBackPressed));
+        }
+     }
 }

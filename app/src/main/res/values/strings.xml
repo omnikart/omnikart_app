@@ -6,15 +6,17 @@
     <string-array name="nav_drawer_items">
         <item >Home</item>
         <item >My Account</item>
-        <item >My Orders</item>
-        <item >default</item>
-        <item >Default</item>
+        <item >Orders History</item>
+        <item >Transactions</item>
+        <item >My Products</item>
+        <item >Ask To Admin</item>
         <item >About Us</item>
     </string-array>
 
     <!-- Nav Drawer List Item Icons -->
     <!-- Keep them in order as the titles are in -->
     <array name="nav_drawer_icons">
+        <item>@drawable/omnikart_logo</item>
         <item>@drawable/omnikart_logo</item>
         <item>@drawable/omnikart_logo</item>
         <item>@drawable/omnikart_logo</item>

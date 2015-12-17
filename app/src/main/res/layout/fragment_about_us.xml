@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+<ScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="OMNIKART  We are a young and dynamic organization promoted by alumni of prestigious institutes like IIT’s and IIST. We, at Omnikart, believe in innovation and reformation. In this fast changing dynamic world, business requires new techniques and a vision to execute procurements in an efficient and hassle free method.  We as sourcing partner provide such businesses the liberty to look forward to Omnikart as their trusted platform to buy products. Omnikart helps its clients procure with confidence letting them focus on their other business processes. At Omnikart, each product is sourced after hours of research and diligent process for supplier verification. We hope to emerge as India’s most trusted sourcing platform in coming era of ‘Make in India’.    BUYER  Omnikart is the best place if you are looking for sourcing partners for buying products. An organization or an individual who is not satisfied with their present suppliers or procuring methods shall find Omnikart as the best Procurement service provider. Here you will find all authentic products meeting your company standards.     SELLER  If you are a Manufacturer, distributor or a supplier who want to reach out to customers, who want to create awareness about their products and generate revenues through the new and vast e-commerce sales cycle, you have Omnikart-an organization which believes in propelling the business economy forward.    VALUE PROPOSITION  We have generated a unique online platform which helps in strategic procurement providing:  1. Hassle free procurement  2. Access to a wide array of products  3. Saves time money and resources  4. Identifying requirements and narrowing down on products  5. Providing products matching your purchasing criteria"
+        android:id="@+id/textView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+    </ScrollView>
+</RelativeLayout>

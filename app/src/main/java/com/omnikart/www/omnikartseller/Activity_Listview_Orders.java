@@ -41,6 +41,7 @@ public class Activity_Listview_Orders extends AppCompatActivity{
     ProgressBar progressBar;
     String authorization;
     String set_cookie;
+
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -55,7 +56,7 @@ public class Activity_Listview_Orders extends AppCompatActivity{
     }
    @Override
     public void onResume(){
-        super.onResume();
+       super.onResume();
         Connection_Fetch_Orders();
     }
     public void Connection_Fetch_Orders() {
@@ -163,6 +164,7 @@ public class Activity_Listview_Orders extends AppCompatActivity{
             }
         });
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_activity__fragments__firsttime, menu);
@@ -180,6 +182,5 @@ public class Activity_Listview_Orders extends AppCompatActivity{
                 return super.onOptionsItemSelected(item);
         }
     }
-
 
 }

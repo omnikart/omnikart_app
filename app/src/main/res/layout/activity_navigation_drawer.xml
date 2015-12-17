@@ -14,7 +14,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/content_frame"></FrameLayout>
+            android:id="@+id/frame_container"></FrameLayout>
 
         <ListView
             android:id="@+id/slider_menu"

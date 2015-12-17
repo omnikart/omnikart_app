@@ -42,8 +42,6 @@ public class Main_Login_Page extends AppCompatActivity{
     CheckBox checkBox;
     JSONObject params;
     String url;
-    String access_token = "";
-    String token_type = "";
     String success="";
     String authorization = "";
     ProgressBar progressBar;

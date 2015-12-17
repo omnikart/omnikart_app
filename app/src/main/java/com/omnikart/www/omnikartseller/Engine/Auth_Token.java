@@ -60,10 +60,9 @@ public class Auth_Token {
                             if(response.has("token_type")){
                                 token_type = response.getString("token_type");}
                             Log.d("Volley new auth", access_token + "   " + expires_in + "  " + token_type);
-                            auth.setAuthorization(access_token,expires_in,token_type);
+                            auth.setAuthorization(access_token, expires_in, token_type);
+                            Background_Login background_login = new Background_Login(context);
 
-                            Intent i = new Intent(context,Main_Login_Page.class);
-                            ((Activity)context).startActivity(i);
                             } catch (JSONException e) {
                             e.printStackTrace();
                         }
