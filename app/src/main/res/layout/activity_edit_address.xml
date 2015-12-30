@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_firstname"
+        android:layout_gravity="center_horizontal"
+        android:hint="First Name"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="10dp"/>
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_lastname"
+        android:layout_gravity="center_horizontal"
+        android:hint="Last Name"
+        android:layout_marginLeft="5dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_company"
+        android:layout_gravity="center_horizontal"
+        android:hint="Company Name"
+        android:layout_marginLeft="5dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_address1"
+        android:layout_gravity="center_horizontal"
+        android:hint="Address 1"
+        android:layout_marginLeft="5dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_address2"
+        android:layout_gravity="center_horizontal"
+        android:hint="Address2"
+        android:layout_marginLeft="5dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_city"
+        android:layout_gravity="center_horizontal"
+        android:hint="City"
+        android:layout_marginLeft="5dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_postcode"
+        android:layout_gravity="center_horizontal"
+        android:hint="Postcode"
+        android:layout_marginLeft="5dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_state"
+        android:layout_gravity="center_horizontal"
+        android:hint="State"
+        android:layout_marginLeft="5dp" />
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText_country"
+        android:layout_gravity="center_horizontal"
+        android:hint="Country"
+        android:layout_marginLeft="5dp" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/button_save_address"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="15dp" />
+
+</LinearLayout>
+</ScrollView>

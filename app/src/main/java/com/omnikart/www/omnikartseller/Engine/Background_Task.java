@@ -10,7 +10,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.omnikart.www.omnikartseller.Activity_Error;
 import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
-import com.omnikart.www.omnikartseller.Main_Login_Page;
 import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
 
 import org.json.JSONException;
@@ -55,7 +54,7 @@ Context mContext;
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(mContext, "Please check your internet connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Please check your internet connection ", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(mContext, Activity_Error.class);
                     mContext.startActivity(intent);
                     ((Activity) context).finish();

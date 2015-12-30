@@ -35,9 +35,9 @@ public class VolleySingleton {
     private ImageLoader imageLoader;
     String authorization = "";
     Boolean isInternet= false;
-    private Context mContext;
+    final private Context mContext;
 
-    public VolleySingleton(Context context) {
+    public VolleySingleton(final Context context) {
         this.mContext = context;
         requestQueue = Volley.newRequestQueue(context);
         Authorization auth = new Authorization(context);
@@ -98,6 +98,7 @@ public class VolleySingleton {
             Toast.makeText(mContext,"No INTERNET",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext,Activity_Error.class);
             mContext.startActivity(intent);
+            ((Activity)mContext).finish();
         }
     }
     public void postWithParams(String paramString,JSONObject paramJSONObject,Response.Listener<JSONObject> listener,Response.ErrorListener errorListener) {
@@ -109,6 +110,7 @@ public class VolleySingleton {
             Toast.makeText(mContext,"No INTERNET",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext,Activity_Error.class);
             mContext.startActivity(intent);
+            ((Activity)mContext).finish();
         }
     }
     public void postWithHeaders(String paramString,Response.Listener<JSONObject> listener,Response.ErrorListener errorListener){
@@ -130,6 +132,7 @@ public class VolleySingleton {
         Toast.makeText(mContext,"No INTERNET",Toast.LENGTH_SHORT).show();
           Intent intent = new Intent(mContext,Activity_Error.class);
           mContext.startActivity(intent);
+          ((Activity)mContext).finish();
     }
     }
     public void post(String paramString,Response.Listener<JSONObject> listener,Response.ErrorListener errorListener) {
@@ -141,6 +144,7 @@ public class VolleySingleton {
             Toast.makeText(mContext,"No INTERNET",Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext,Activity_Error.class);
             mContext.startActivity(intent);
+            ((Activity)mContext).finish();
         }
     }
 
@@ -163,9 +167,32 @@ public class VolleySingleton {
         Toast.makeText(mContext,"No INTERNET",Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(mContext,Activity_Error.class);
         mContext.startActivity(intent);
+           ((Activity)mContext).finish();
     }
     }
 
+    public void putWithHeadersWithParams(String paramString,JSONObject paramJSONObject,Response.Listener<JSONObject> listener,Response.ErrorListener errorListener) {
+        if (isInternet) {
+            JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.PUT, paramString, paramJSONObject, listener, errorListener) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    HashMap<String, String> headers = new HashMap<String, String>();
+                    headers.put("Authorization", authorization);
+                    Log.d("Volley 1jsj Auth new", authorization);
+                    Log.d("Volley 1lkl full header", String.valueOf(headers) + "###");
+                    return headers;
+                }
+
+            };
+            addToRequestQueue(jsonObjectRequest);
+        }
+        else {
+            Toast.makeText(mContext,"No INTERNET",Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(mContext,Activity_Error.class);
+            mContext.startActivity(intent);
+            ((Activity)mContext).finish();
+        }
+    }
 
 }
 

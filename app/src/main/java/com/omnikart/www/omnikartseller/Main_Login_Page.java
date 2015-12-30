@@ -51,6 +51,7 @@ public class Main_Login_Page extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_login_page);
+        Log.d("in", "main login page");
         email = (EditText) findViewById(R.id.editText_email);
         password = (EditText) findViewById(R.id.editText_password);
         btn_login = (Button) findViewById(R.id.button_loginpage);
@@ -115,7 +116,7 @@ public class Main_Login_Page extends AppCompatActivity{
                         Log.d("Volley 1 error",response.getString("error")); }
                     if(response.has("data")) {
                         JSONObject data = response.getJSONObject("data");
-                        String[] data_array = new String[]{"customer_id","customer_group_id","store_id",
+                        String[] data_array = {"customer_id","customer_group_id","store_id",
                                 "firstname","lastname","email","telephone","fax","cart","wishlist","newsletter",
                                 "address_id","ip","status","approved","safe","date_added","session","custom_fields",
                                 "account_custom_field"};

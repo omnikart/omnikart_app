@@ -40,7 +40,7 @@ public class Activity_Listview_Orders extends AppCompatActivity{
     String url;
     ProgressBar progressBar;
     String authorization;
-    String set_cookie;
+   // String set_cookie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){

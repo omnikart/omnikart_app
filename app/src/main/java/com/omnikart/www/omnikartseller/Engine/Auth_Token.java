@@ -18,7 +18,6 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.omnikart.www.omnikartseller.Helper.Authorization;
 import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
-import com.omnikart.www.omnikartseller.Main_Login_Page;
 import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
 
 import org.json.JSONException;

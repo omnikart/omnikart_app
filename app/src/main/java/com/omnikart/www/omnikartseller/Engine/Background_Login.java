@@ -13,6 +13,7 @@ import com.android.volley.VolleyError;
 import com.omnikart.www.omnikartseller.Front_Page;
 import com.omnikart.www.omnikartseller.Helper.Authorization;
 import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
+import com.omnikart.www.omnikartseller.Main_Activity;
 import com.omnikart.www.omnikartseller.Main_Login_Page;
 import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
 
@@ -30,7 +31,7 @@ public class Background_Login {
     ProgressBar progressBar;
     Boolean isLoggedIn;
     Preference_Helper preference_helper;
-    Context mContext;
+    final Context mContext;
     public Background_Login(final Context context) {
         this.mContext = context;
         url = "http://testing.omnikart.com/index.php?route=rest/login/login";
@@ -53,9 +54,10 @@ public class Background_Login {
             Log.d("islogeedin", params.toString());
 
             ConnectionLogIn();
-            ((Activity)context).finish();
+           // ((Activity)context).finish();
         }
         else{
+            Log.d("back login","goin to main login");
             Intent intent = new Intent(mContext, Main_Login_Page.class);
             mContext.startActivity(intent);
             ((Activity)context).finish();
@@ -105,6 +107,13 @@ public class Background_Login {
                 // Log.d("Volley 1",error.getMessage());
                 Toast.makeText(mContext, "Error in connection", Toast.LENGTH_SHORT).show();
                // progressBar.setVisibility(View.GONE);
+                // start main login page
+                Intent intent = new Intent(mContext, Main_Login_Page.class);
+                Log.d("Location", "new activity");
+
+                mContext.startActivity(intent);
+                ((Activity)mContext).finish();
+
             }
         });
 
@@ -115,13 +124,20 @@ public class Background_Login {
             Log.d("Location", "new activity");
 
             mContext.startActivity(intent);
-           // ((Activity)context).finish();
+            ((Activity)mContext).finish();
+
         }
 
         else {
             Toast.makeText(mContext,"Invalid Username or Password",Toast.LENGTH_SHORT).show();
             Log.d("Location", "Toast");
             Log.d("isloggedin", "is logged in is " + isLoggedIn);
+            //start main login page
+            Intent intent = new Intent(mContext, Main_Login_Page.class);
+            Log.d("Location", "new activity");
+
+            mContext.startActivity(intent);
+            ((Activity)mContext).finish();
         }
 
 }

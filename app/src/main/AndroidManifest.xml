@@ -24,6 +24,10 @@
         <activity android:name=".Order_Details"/>
         <activity android:name=".Activity_Error"/>
         <activity android:name=".Front_Page"/>
+        <activity android:name=".Change_Password"/>
+        <activity android:name=".Activity_Address"/>
+        <activity android:name=".Activity_Add_Address"/>
+        <activity android:name=".Activity_Edit_Address"/>
     </application>
 
 </manifest>

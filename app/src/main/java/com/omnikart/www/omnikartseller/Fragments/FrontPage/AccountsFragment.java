@@ -3,7 +3,6 @@ package com.omnikart.www.omnikartseller.Fragments.FrontPage;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,8 @@ import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.omnikart.www.omnikartseller.Change_Password;
+import com.omnikart.www.omnikartseller.Activity_Address;
 import com.omnikart.www.omnikartseller.Helper.Preference_Helper;
 import com.omnikart.www.omnikartseller.Main_Activity;
 import com.omnikart.www.omnikartseller.Network.Volley.VolleySingleton;
@@ -46,7 +47,7 @@ public class AccountsFragment extends Fragment {
 
         View rootView = inflater.inflate(R.layout.fragment_accounts, container, false);
         firstname =(EditText) rootView.findViewById(R.id.editText_firstname);
-        lastname =(EditText) rootView.findViewById(R.id.editText_lasttname);
+        lastname =(EditText) rootView.findViewById(R.id.editText_lastname);
         email =(EditText) rootView.findViewById(R.id.editText_email);
         mobile =(EditText) rootView.findViewById(R.id.editText_mobileno);
         fax =(EditText) rootView.findViewById(R.id.editText_fax);
@@ -59,6 +60,8 @@ public class AccountsFragment extends Fragment {
 
         fetchSavedData();
         updateProfile();
+        changePassword();
+        editAddress();
         logout();
         return rootView;
     }
@@ -76,16 +79,16 @@ public class AccountsFragment extends Fragment {
                 if (validation()) {
                     params = new JSONObject();
                     try {
-                        params.put("firstname",firstname.getText());
-                        params.put("lastname",lastname.getText());
-                        params.put("email",email.getText());
-                        params.put("telephone",mobile.getText());
-                        params.put("fax",fax.getText());
+                        params.put("firstname", firstname.getText());
+                        params.put("lastname", lastname.getText());
+                        params.put("email", email.getText());
+                        params.put("telephone", mobile.getText());
+                        params.put("fax", fax.getText());
 
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Toast.makeText(getActivity().getApplicationContext(), "noerror", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getActivity().getApplicationContext(), "noerror", Toast.LENGTH_SHORT).show();
                     VolleySingleton volleySingleton = new VolleySingleton(getActivity().getApplicationContext());
                     volleySingleton.postWithHeadersWithParams(url, params, new Response.Listener<JSONObject>() {
                         @Override
@@ -94,9 +97,11 @@ public class AccountsFragment extends Fragment {
                             try {
                                 if (response.has("success")) {
                                     success = response.getString("success");
-                                    Log.d("success",success);
+                                    Log.d("success", success);
                                 }
-                                if (response.has("error")){Log.d("success error",response.getString("error"));}
+                                if (response.has("error")) {
+                                    Log.d("success error", response.getString("error"));
+                                }
                                 if (success.equals("true")) {
                                     Toast.makeText(getActivity().getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
                                     prefs.save("firstname", firstname.getText().toString());
@@ -147,9 +152,27 @@ public class AccountsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 prefs.save("isLoggedIn",false);
-                Intent intent = new Intent(getActivity(),Main_Activity.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(),Main_Activity.class);
                 startActivity(intent);
                 getActivity().finish();
+            }
+        });
+    }
+    public void changePassword(){
+        password.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(),Change_Password.class);
+                startActivity(intent);
+            }
+        });
+    }
+    public void editAddress(){
+        address.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity().getApplicationContext(),Activity_Address.class);
+                startActivity(intent);
             }
         });
     }
